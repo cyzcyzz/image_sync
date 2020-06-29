@@ -1,0 +1,20 @@
+level="INFO"
+
+[redis]
+addr="0.0.0.0:6379"
+db=10
+
+[production]
+start_over=false
+listen="0.0.0.0:18000"
+
+[consumer]
+start_over=true
+dockerendpoint="tcp://0.0.0.0:2375"
+target=["172.16.32.32:5000"]
+
+# 配置用于push成功后确认是否存在，和target一样，后期会去掉这个结构体，这里重复了
+[registry]
+url=["http://172.16.32.32:5000"]
+username=""
+password=""
