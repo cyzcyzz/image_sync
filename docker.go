@@ -17,7 +17,6 @@ type Image struct {
 	Time        string `json:"time"`
 }
 
-//type Info RegistryInfo
 
 type Docker struct {
 	Client *docker.Client
@@ -25,7 +24,6 @@ type Docker struct {
 
 type result = []map[string]bool
 
-//func newInfo()
 func (d *Docker) Pull(host, repo, tag string) error {
 	err := d.Client.PullImage(docker.PullImageOptions{
 		Repository: host,
@@ -93,11 +91,11 @@ func (d *Docker) PruneImage() (bool, error) {
 	return ident, nil
 }
 
-func (r *RegistryInfo) getSuccess(repo, tag string) (result, error) {
+func getSuccess(repo, tag string) (result, error) {
 	tmpResult := make(map[string]bool)
 	var result result
-	for _, url := range r.Url {
-		hub, errH := registry.New(url, r.UserName, r.Password)
+	for _, url := range config.Registry.Url {
+		hub, errH := registry.New(url, config.Registry.UserName, config.Registry.Password)
 		if errH != nil {
 			glog.Errorf("生成客户端失败，错误：%s", errH)
 			continue
@@ -122,7 +120,7 @@ func (d *Docker) SyncImage(targets []string, chanel ClientInterface) {
 	for {
 		event, err := chanel.BLPop("event")
 		if err != nil {
-			glog.V(4).Info("弹出队列出错：", err)
+			glog.V(5).Info("弹出队列出错：", err)
 		} else {
 			glog.V(4).Info("弹出队列:", event)
 			image := &Image{}
@@ -151,12 +149,7 @@ func (d *Docker) SyncImage(targets []string, chanel ClientInterface) {
 			if errPush != nil {
 				panic(errPush) //始终是空，未处理
 			}
-			r := &RegistryInfo{
-				Password: Cfg.Registry.Password,
-				UserName: Cfg.Registry.UserName,
-				Url: Cfg.Registry.Url,
-			}
-			res, errG := r.getSuccess(image.Repo, image.Tag)
+			res, errG := getSuccess(image.Repo, image.Tag)
 			if errG != nil {
 				glog.V(4).Info("获取结果错误", errG)
 			}

@@ -1,16 +1,11 @@
-level="INFO"
-
 [redis]
-addr="0.0.0.0:6379"
+addr="172.20.99.99:6379"
 db=10
 
-[production]
-start_over=false
+[global]
 listen="0.0.0.0:18000"
-
-[consumer]
-start_over=true
-dockerendpoint="tcp://0.0.0.0:2375"
+mode="production" # production | consumer
+dockerendpoint="tcp://172.20.99.99:2375"
 target=["172.16.32.32:5000"]
 
 # 配置用于push成功后确认是否存在，和target一样，后期会去掉这个结构体，这里重复了

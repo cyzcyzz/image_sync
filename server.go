@@ -15,15 +15,6 @@ type SvrConfig struct {
 	Channel ClientInterface
 }
 
-//type Images struct {
-//	Id int64
-//	RegistryName string
-//	Image string
-//	Tag string
-//	Timestamp int64
-//	Digest string
-//	Description string
-//}
 
 func getData(data gjson.Result, key string) string {
 	if key == "host" {
